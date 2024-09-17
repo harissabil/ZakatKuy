@@ -1,13 +1,15 @@
 package com.harissabil.zakatkuy.ui.components
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
-import android.util.Log
+import android.webkit.WebSettings
 import android.webkit.WebView
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,7 +24,9 @@ import com.google.accompanist.web.LoadingState
 import com.google.accompanist.web.WebView
 import com.google.accompanist.web.rememberWebViewNavigator
 import com.google.accompanist.web.rememberWebViewState
+import timber.log.Timber
 
+@SuppressLint("SetJavaScriptEnabled")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WebBrowser(
@@ -35,7 +39,9 @@ fun WebBrowser(
     val navigator = rememberWebViewNavigator()
 
     Column(
-        modifier = Modifier.fillMaxSize().then(modifier)
+        modifier = Modifier
+            .fillMaxSize()
+            .then(modifier)
     ) {
         TopAppBar(
             title = { Text(text = title) },
@@ -44,6 +50,14 @@ fun WebBrowser(
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "Back"
+                    )
+                }
+            },
+            actions = {
+                IconButton(onClick = { navigator.reload() }) {
+                    Icon(
+                        imageVector = Icons.Default.Refresh,
+                        contentDescription = "Reload"
                     )
                 }
             }
@@ -61,7 +75,7 @@ fun WebBrowser(
             object : AccompanistWebViewClient() {
                 override fun onPageStarted(view: WebView, url: String?, favicon: Bitmap?) {
                     super.onPageStarted(view, url, favicon)
-                    Log.d("Accompanist WebView", "Page started loading for $url")
+                    Timber.tag("Accompanist WebView").d("Page started loading for %s", url)
                 }
             }
         }
@@ -71,7 +85,11 @@ fun WebBrowser(
             modifier = Modifier.weight(1f),
             navigator = navigator,
             onCreated = { webView ->
-                webView.settings.javaScriptEnabled = true
+                webView.settings.apply {
+                    javaScriptEnabled = true
+                    domStorageEnabled = true
+                    pluginState = WebSettings.PluginState.ON
+                }
             },
             client = webClient
         )
