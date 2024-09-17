@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ZakatKuy</string>
+    <string name="fileprovider">com.harissabil.zakatkuy.components.fileprovider</string>
+    <string name="title_activity_dashboard_amil">DashboardAmilActivity</string>
+</resources>
