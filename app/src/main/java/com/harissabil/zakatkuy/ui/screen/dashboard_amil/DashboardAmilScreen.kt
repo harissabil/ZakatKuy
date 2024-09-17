@@ -16,7 +16,7 @@ fun DashboardAmilScreen(
     modifier: Modifier = Modifier,
     onNavigateUp: () -> Unit,
 ) {
-    val url by rememberSaveable { mutableStateOf("www.google.com") } // TODO: Change this to the actual URL
+    val url by rememberSaveable { mutableStateOf("https://beranda-siamil.streamlit.app/") } // TODO: Change this to the actual URL
 
     Scaffold { innerPadding ->
         WebBrowser(
